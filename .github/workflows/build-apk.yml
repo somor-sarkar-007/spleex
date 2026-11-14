@@ -45,14 +45,27 @@ jobs:
               -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: Build Debug APK
-        run: gradle :app:assembleDebug --no-daemon --stacktrace -Dorg.gradle.jvmargs="-Xmx3g -Dfile.encoding=UTF-8"
+      - name: Generate CI release signing keystore
+        run: |
+          keytool -genkeypair -v -keystore /tmp/spleex-upload.jks \
+            -storepass spleexrelease2026 -alias upload -keypass spleexrelease2026 \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=SPLEEX,O=SPLEEX Social,C=US"
 
-      - name: Upload APK Artifact
+      - name: Build Debug and Release APKs
+        env:
+          KEYSTORE_PATH: /tmp/spleex-upload.jks
+          STORE_PASSWORD: spleexrelease2026
+          KEY_PASSWORD: spleexrelease2026
+        run: gradle :app:assembleDebug :app:assembleRelease --no-daemon --stacktrace -Dorg.gradle.jvmargs="-Xmx3g -Dfile.encoding=UTF-8"
+
+      - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: SPLEEX-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: SPLEEX-apks
+          path: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Publish to GitHub Releases
@@ -60,9 +73,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest-apk
-          name: SPLEEX Latest Debug APK
-          body: Automatically built SPLEEX Android APK ready to download and install on Android.
-          files: app/build/outputs/apk/debug/app-debug.apk
+          name: SPLEEX Latest Android APK
+          body: |
+            Download **app-release.apk** (recommended for Android phones) or **app-debug.apk**.
+            Requires Android 7.0 (API 24) or higher.
+          files: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/debug/app-debug.apk
           overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
