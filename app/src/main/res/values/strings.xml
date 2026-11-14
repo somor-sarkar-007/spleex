@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SPLEEX</string>
+    <string name="tagline">Connect. Share. Discover.</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_profile">Profile</string>
+    <string name="auth_welcome_title">Welcome to SPLEEX</string>
+    <string name="auth_welcome_subtitle">A sleek social space to share moments, stories, reels, and conversations.</string>
+    <string name="auth_login_cta">Sign In</string>
+    <string name="auth_register_cta">Create Account</string>
+    <string name="auth_forgot_password">Forgot password?</string>
+    <string name="empty_feed_title">Your feed is quiet</string>
+    <string name="empty_feed_subtitle">Follow creators or share your first post to light up your SPLEEX feed.</string>
+    <string name="empty_comments">No comments yet. Start the conversation!</string>
+    <string name="empty_messages">No conversations yet. Start a direct or group chat.</string>
+    <string name="empty_notifications">You are all caught up.</string>
+</resources>
